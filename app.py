@@ -151,3 +151,29 @@ def update_user_v1():
         else : 
             return 'usuario e senha válidos.', 200
 
+##Atividade - 04
+@app.route('/v1/users/<username>', methods=['PATCH'])
+def update_password_user_v1(username):
+    data = request.get_json()
+    data['password'] =  generate_password_hash(data['password'])
+    usuario_encontrado = col_users.find_one({'username' : username})
+    if not usuario_encontrado:
+        return 'usuario '+ username + ' não encontrado', 404
+    else:
+        col_users.update({'username': username}, {'$set':{'password': data['password'] }})
+        return 'senha atualizada.', 200
+ 
+ ## Atividade - 05
+@app.route('/v1/questions/<question_id>', methods=['GET'])
+def get_question(question_id):
+    questao_encontrada = col_questions.find_one({'id' : question_id})
+    if questao_encontrada:
+        return json_util.dumps(questao_encontrada), 200
+    else : 
+        return 'Questão '+ question_id + ' não foi encontrada.', 404
+
+
+
+
+
+
